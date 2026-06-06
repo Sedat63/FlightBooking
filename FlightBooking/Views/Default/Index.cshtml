@@ -1,0 +1,63 @@
+﻿@{
+    Layout = null;
+}
+
+<!doctype html>
+<html class="no-js" lang="en">
+    @await Component.InvokeAsync("_DefaultHeadComponentPartial") 
+<body>
+    @await Component.InvokeAsync("_DefaultHeaderComponentPartial")
+    <!-- main-area -->
+    <main>
+
+        <!-- slider-area -->
+        @await Component.InvokeAsync("_DefaultSliderComponentPartial")
+        <!-- slider-area-end -->
+       
+        <!-- booking-area -->
+        @await Component.InvokeAsync("_BookingAreaComponentPartial")       
+        <!-- booking-area-end -->
+
+        <!-- features-area -->
+        @await Component.InvokeAsync("_DefaultFeatureSectionComponentPartial")
+        <!-- features-area-end -->
+        
+        <!-- flight-offer-area -->
+        @await Component.InvokeAsync("_DefaultOfferDealComponentPartial")       
+        <!-- flight-offer-area-end -->
+       
+        <!-- destination-area -->
+        @await Component.InvokeAsync("_DefaultDestinationOfferComponentPartial")       
+        <!-- destination-area-end -->
+
+        <!-- fly-next-area -->
+        @await Component.InvokeAsync("_DefaultPopularDestinationsComponentPartial")      
+        <!-- fly-next-area-end -->
+
+        <!-- service-area -->
+        
+        @await Component.InvokeAsync("_DefaultServiceComponentPartial")
+        <!-- service-area-end -->
+
+        <!-- brand-area -->
+        @await Component.InvokeAsync("_DefaultFlightStatusComponentPartial")        
+        <!-- brand-area-end -->
+
+        <!--FAQ area-->
+        @await Component.InvokeAsync("_DefaultFrequantlyAskedQuestionComponentPartial")
+        <!--FAQ area end-->
+    </main>
+    <!-- main-area-end -->
+
+    <!-- footer-area -->
+    @await Component.InvokeAsync("_DefaultFooterComponentPartial")
+    <!-- footer-area-end -->
+
+    <!-- JS here -->
+    @await Component.InvokeAsync("_DefaultScriptsComponentPartial")
+    <!-- JS here and-->
+
+</body>
+</html>
+
+<h3>SkyRoute</h3>
