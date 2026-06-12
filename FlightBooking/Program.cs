@@ -1,6 +1,10 @@
 using System.Reflection;
 using FlightBooking.Services.BookingServices;
+using FlightBooking.Services.CheckInServices;
 using FlightBooking.Services.FlightServices;
+using FlightBooking.Services.MachineLearningServices;
+using FlightBooking.Services.NoShowServices;
+using FlightBooking.Services.OverBookingNoShowServices;
 using FlightBooking.Settings;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -37,6 +41,7 @@ builder.Services.AddScoped<IMongoDatabase>(sp =>
 });
 
 // FlightService ve BookingService'in constructor'da beklediði MongoDB Koleksiyon Tanýmlarý
+// Bookings
 builder.Services.AddScoped<IMongoCollection<FlightBooking.Entities.Booking>>(sp =>
 {
     var database = sp.GetRequiredService<IMongoDatabase>();
@@ -44,6 +49,7 @@ builder.Services.AddScoped<IMongoCollection<FlightBooking.Entities.Booking>>(sp 
     return database.GetCollection<FlightBooking.Entities.Booking>(collectionName);
 });
 
+// Flights
 builder.Services.AddScoped<IMongoCollection<FlightBooking.Entities.Flight>>(sp =>
 {
     var database = sp.GetRequiredService<IMongoDatabase>();
@@ -51,6 +57,23 @@ builder.Services.AddScoped<IMongoCollection<FlightBooking.Entities.Flight>>(sp =
     return database.GetCollection<FlightBooking.Entities.Flight>(collectionName);
 });
 
+// CheckIns
+builder.Services.AddScoped<IMongoCollection<FlightBooking.Entities.CheckIn>>(sp =>
+{
+    var database = sp.GetRequiredService<IMongoDatabase>();
+    // Burayý CheckInCollectionName ve varsayýlaný da "CheckIns" yaptýk
+    string collectionName = databaseSettings?.CheckInCollectionName ?? "CheckIns";
+    return database.GetCollection<FlightBooking.Entities.CheckIn>(collectionName);
+});
+
+// FlightDemandHistories (MongoDB'deki ham veriyi okumak için)
+//builder.Services.AddScoped<IMongoCollection<FlightBooking.MachineLearningModels.FlightRawData>>(sp =>
+//{
+//    var database = sp.GetRequiredService<IMongoDatabase>();
+//    // appsettings.json'da tanýmladýysan collection adýný çek, yoksa varsayýlan olarak "FlightDemandHistories" kullan
+//    string collectionName = databaseSettings?.FlightDemandHistoryCollection ?? "FlightDemandHistories";
+//    return database.GetCollection<FlightBooking.MachineLearningModels.FlightRawData>(collectionName);
+//});
 
 // =========================================================================
 // 2. UYGULAMA SERVÝS KAYITLARI (Dependency Injection)
@@ -58,6 +81,18 @@ builder.Services.AddScoped<IMongoCollection<FlightBooking.Entities.Flight>>(sp =
 
 builder.Services.AddScoped<IFlightService, FlightService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ICheckInService, CheckInService>();
+
+builder.Services.AddSingleton<FlightMlService>();
+builder.Services.AddScoped<MongoFlightDataService>();
+
+builder.Services.AddSingleton<FlightRegressionService>();
+
+builder.Services.AddScoped<NoShowService>();
+
+builder.Services.AddScoped<OverbookingRecommendationService>();
+
+builder.Services.AddScoped<NoShowPredictionService>();
 
 builder.Services.AddAutoMapper(cfg =>
 {
